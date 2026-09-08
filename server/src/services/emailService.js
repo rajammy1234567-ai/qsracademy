@@ -8,11 +8,13 @@ const DEFAULT_RECIPIENT = process.env.ADMIN_NOTIFICATION_EMAIL || 'academyqsr@gm
  */
 const getTransporter = () => {
   const user = process.env.SMTP_USER || process.env.ADMIN_NOTIFICATION_EMAIL || 'academyqsr@gmail.com';
-  const pass = process.env.SMTP_PASS || 'drar hjww nvga tedp';
+  const rawPass = process.env.SMTP_PASS || 'joma vbzt tsae dzbk';
 
-  if (!pass) {
+  if (!rawPass) {
     return null;
   }
+
+  const pass = rawPass.trim();
 
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
