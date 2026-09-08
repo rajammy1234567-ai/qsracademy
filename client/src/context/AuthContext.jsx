@@ -30,6 +30,13 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const res = await api.login({ email, password });
     if (res.success && res.user) {
+      if (res.token) {
+        try {
+          sessionStorage.setItem('qsr_admin_token', res.token);
+        } catch (e) {
+          // Ignore private mode warning
+        }
+      }
       setUser(res.user);
       return res;
     }
@@ -42,6 +49,11 @@ export const AuthProvider = ({ children }) => {
     } catch (e) {
       console.error('Logout error:', e);
     } finally {
+      try {
+        sessionStorage.removeItem('qsr_admin_token');
+      } catch (e) {
+        // Ignore private mode warning
+      }
       setUser(null);
     }
   };

@@ -2,9 +2,17 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
+  let token = null;
+  try {
+    token = typeof window !== 'undefined' ? sessionStorage.getItem('qsr_admin_token') : null;
+  } catch {
+    // Ignore storage errors in restricted iframes
+  }
+
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
     credentials: 'include', // Ensures httpOnly JWT cookies are transmitted

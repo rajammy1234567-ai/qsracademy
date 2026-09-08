@@ -32,10 +32,11 @@ const errorHandler = (err, req, res, next) => {
       .join(', ');
   }
 
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
   res.status(statusCode).json({
     success: false,
     message: message || 'Something went wrong on the server',
-    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }),
+    ...(!isProd && { stack: err.stack }),
   });
 };
 

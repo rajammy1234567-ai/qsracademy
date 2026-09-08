@@ -26,6 +26,7 @@ connectDB();
 
 // Trust reverse proxy (for rate limiters and secure cookies on production platforms)
 app.set('trust proxy', 1);
+app.disable('x-powered-by');
 
 // Security HTTP Headers
 app.use(
@@ -42,11 +43,13 @@ const clientOrigins = [
   'http://localhost:3000',
 ];
 
+const vercelOriginRegex = /^https:\/\/[a-zA-Z0-9_\-]+\.vercel\.app$/i;
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, curl, server-to-server) or Vercel previews
-      if (!origin || clientOrigins.includes(origin) || (typeof origin === 'string' && origin.endsWith('.vercel.app'))) {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server) or verified Vercel previews
+      if (!origin || clientOrigins.includes(origin) || vercelOriginRegex.test(origin)) {
         callback(null, true);
       } else {
         callback(new Error(`Origin ${origin} not allowed by CORS`));
