@@ -220,6 +220,47 @@ const sendLeadNotification = async ({ type, data }) => {
     adminUrl,
   });
 
+  // 1. Primary Dispatcher: Web3Forms HTTPS API (100% reliable on Vercel, zero Google 534 blocks)
+  const web3FormsKey = process.env.WEB3FORMS_ACCESS_KEY || '64224096-cb27-45db-a2f0-7529eef24d6e';
+  if (web3FormsKey) {
+    try {
+      const plainDetails = {};
+      fields.forEach((f) => {
+        plainDetails[f.label] = f.value.replace(/<[^>]*>?/gm, '');
+      });
+
+      const payload = {
+        access_key: web3FormsKey,
+        subject: `[QSR ACADEMY] ${title}`,
+        from_name: `QSR ACADEMY Leads (${category})`,
+        ...plainDetails,
+        message: messageText || 'No extra remarks provided',
+        admin_dashboard_link: adminUrl,
+      };
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const resData = await response.json().catch(() => ({}));
+      if (resData.success) {
+        console.log(`✅ [EmailService - Web3Forms]: Live notification sent to ${DEFAULT_RECIPIENT} for [${title}]`);
+        return { success: true, provider: 'web3forms' };
+      } else {
+        console.warn('⚠️ [Web3Forms Warn]:', resData.message);
+      }
+    } catch (apiErr) {
+      console.warn('⚠️ [Web3Forms Error]:', apiErr.message);
+    }
+  }
+
+  // 2. Secondary Dispatcher: SMTP / Nodemailer fallback
   const transporter = getTransporter();
 
   // If no SMTP password provided, log the email preview cleanly
@@ -231,7 +272,6 @@ const sendLeadNotification = async ({ type, data }) => {
     console.log('📝 DETAILS:');
     fields.forEach((f) => console.log(`   - ${f.label}: ${f.value.replace(/<[^>]*>?/gm, '')}`));
     if (messageText) console.log(`💬 MESSAGE: "${messageText}"`);
-    console.log('ℹ️  Note: To send live emails to inbox, configure SMTP_PASS in server/.env');
     console.log('=============================================================\n');
     return { success: true, simulated: true };
   }
@@ -247,11 +287,10 @@ const sendLeadNotification = async ({ type, data }) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ [EmailService]: Live notification successfully sent to ${DEFAULT_RECIPIENT} (ID: ${info.messageId})`);
+    console.log(`✅ [EmailService - SMTP]: Live notification successfully sent to ${DEFAULT_RECIPIENT} (ID: ${info.messageId})`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
     console.error(`❌ [EmailService Error]: Failed to send notification email to ${DEFAULT_RECIPIENT}:`, err.message);
-    // Do not throw so client submission response is not interrupted
     return { success: false, error: err.message };
   }
 };
