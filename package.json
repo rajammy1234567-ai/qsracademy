@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "QSR ACADEMY — Full-Stack MERN Website & Lead Management Console",
   "scripts": {
-    "build": "npm run build --prefix client",
+    "build": "cd client && npm install --include=dev && npm run build",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "build:client": "npm run build --prefix client",
