@@ -48,8 +48,8 @@ const submitAdmission = async (req, res, next) => {
       store.admissions.unshift(newRecord);
     }
 
-    // Dispatch email alert to academyqsr@gmail.com (non-blocking)
-    sendLeadNotification({ type: 'ADMISSION', data: newRecord }).catch((err) =>
+    // Dispatch email alert to academyqsr@gmail.com (await for serverless lifecycle)
+    await sendLeadNotification({ type: 'ADMISSION', data: newRecord }).catch((err) =>
       console.error('[EmailService] Admission notification error:', err)
     );
 
@@ -97,8 +97,8 @@ const submitFranchise = async (req, res, next) => {
       store.franchiseEnquiries.unshift(newRecord);
     }
 
-    // Dispatch email alert to academyqsr@gmail.com (non-blocking)
-    sendLeadNotification({ type: 'FRANCHISE', data: newRecord }).catch((err) =>
+    // Dispatch email alert to academyqsr@gmail.com (await for serverless lifecycle)
+    await sendLeadNotification({ type: 'FRANCHISE', data: newRecord }).catch((err) =>
       console.error('[EmailService] Franchise notification error:', err)
     );
 
@@ -146,8 +146,8 @@ const submitHiring = async (req, res, next) => {
       store.hiringEnquiries.unshift(newRecord);
     }
 
-    // Dispatch email alert to academyqsr@gmail.com (non-blocking)
-    sendLeadNotification({ type: 'HIRING', data: newRecord }).catch((err) =>
+    // Dispatch email alert to academyqsr@gmail.com (await for serverless lifecycle)
+    await sendLeadNotification({ type: 'HIRING', data: newRecord }).catch((err) =>
       console.error('[EmailService] Hiring notification error:', err)
     );
 
@@ -192,8 +192,8 @@ const submitContact = async (req, res, next) => {
       store.contactMessages.unshift(newRecord);
     }
 
-    // Dispatch email alert to academyqsr@gmail.com (non-blocking)
-    sendLeadNotification({ type: 'CONTACT', data: newRecord }).catch((err) =>
+    // Dispatch email alert to academyqsr@gmail.com (await for serverless lifecycle)
+    await sendLeadNotification({ type: 'CONTACT', data: newRecord }).catch((err) =>
       console.error('[EmailService] Contact notification error:', err)
     );
 

@@ -8,7 +8,7 @@ const DEFAULT_RECIPIENT = process.env.ADMIN_NOTIFICATION_EMAIL || 'academyqsr@gm
  */
 const getTransporter = () => {
   const user = process.env.SMTP_USER || process.env.ADMIN_NOTIFICATION_EMAIL || 'academyqsr@gmail.com';
-  const pass = process.env.SMTP_PASS;
+  const pass = process.env.SMTP_PASS || 'drar hjww nvga tedp';
 
   if (!pass) {
     return null;
