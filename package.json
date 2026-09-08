@@ -1,0 +1,41 @@
+{
+  "name": "qsr-academy-workspace",
+  "version": "1.0.0",
+  "description": "QSR ACADEMY — Full-Stack MERN Website & Lead Management Console",
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build:client": "npm run build --prefix client",
+    "seed": "npm run seed --prefix server",
+    "start": "npm start --prefix server"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "compression": "^1.8.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "morgan": "^1.10.0",
+    "nodemailer": "^10.0.1"
+  },
+  "keywords": [
+    "qsr",
+    "academy",
+    "mern",
+    "training",
+    "franchise",
+    "react",
+    "express",
+    "mongodb"
+  ],
+  "author": "QSR Academy",
+  "license": "ISC"
+}
